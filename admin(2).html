@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA | پنل مدیریت</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+body { background:#f4f5f8; }
+.admin { min-height:100vh; display:grid; grid-template-columns:240px 1fr; }
+.sidebar { background:#111214; color:white; padding:30px 20px; }
+.sidebar h2 { font-family:Arial; margin-bottom:35px; }
+.sidebar h2 span { color:#7188ff; }
+.sidebar a { display:block; color:#ccc; padding:12px; font-size:13px; }
+.sidebar a:hover { background:#252832; color:white; }
+.admin-main { padding:35px; }
+.admin-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; }
+.admin-header h1 { font-size:25px; }
+.admin-card { background:white; padding:25px; border-radius:8px; margin-bottom:20px; border:1px solid #eee; }
+.admin-card h3 { margin-bottom:15px; }
+.admin-form { display:grid; gap:12px; }
+.admin-form input, .admin-form textarea {
+padding:13px; border:1px solid #ddd; border-radius:5px; width:100%;
+}
+.admin-form button {
+background:#111214; color:white; padding:13px; border:0;
+border-radius:5px; cursor:pointer;
+}
+.admin-list { display:grid; gap:10px; }
+.admin-item {
+padding:15px; background:#f7f7f7; display:flex;
+justify-content:space-between; align-items:center; gap:10px;
+}
+.delete-btn {
+background:#e94b4b; color:white; border:0;
+padding:7px 12px; cursor:pointer; border-radius:4px;
+}
+@media(max-width:700px) {
+.admin { grid-template-columns:1fr; }
+.sidebar { padding:15px; }
+.sidebar a { display:inline-block; }
+.admin-main { padding:18px; }
+.admin-header { align-items:flex-start; gap:10px; flex-direction:column; }
+}
+</style>
+</head>
+
+<body>
+<div class="admin">
+
+<aside class="sidebar">
+<h2>NOVA<span>.</span></h2>
+<a href="index.html">مشاهده سایت</a>
+<a href="#dashboard">داشبورد</a>
+<a href="#projects">مدیریت نمونه‌کارها</a>
+<a href="#messages">پیام‌ها</a>
+</aside>
+
+<main class="admin-main">
+
+<div class="admin-header" id="dashboard">
+<h1>پنل مدیریت</h1>
+<span>مدیریت وب‌سایت NOVA</span>
+</div>
+
+<section class="admin-card">
+<h3>افزودن نمونه‌کار جدید</h3>
+
+<form class="admin-form" id="projectForm">
+<input id="projectName" placeholder="نام پروژه" required>
+<input id="projectCategory" placeholder="دسته‌بندی پروژه" required>
+<textarea id="projectDescription" placeholder="توضیحات پروژه" required></textarea>
+<button type="submit">افزودن نمونه‌کار</button>
+</form>
+</section>
+
+<section class="admin-card" id="projects">
+<h3>نمونه‌کارهای ثبت‌شده</h3>
+<div class="admin-list" id="projectList"></div>
+</section>
+
+<section class="admin-card" id="messages">
+<h3>پیام‌های دریافتی</h3>
+<p>برای دریافت واقعی پیام‌ها باید فرم تماس سایت به پایگاه داده متصل شود.</p>
+</section>
+
+</main>
+</div>
+
+<script>
+const form = document.getElementById("projectForm");
+const list = document.getElementById("projectList");
+
+let projects = [];
+
+function renderProjects() {
+  list.innerHTML = "";
+
+  projects.forEach((project, index) => {
+    const item = document.createElement("div");
+    item.className = "admin-item";
+
+    const info = document.createElement("div");
+    const title = document.createElement("strong");
+    const category = document.createElement("p");
+
+    title.textContent = project.name;
+    category.textContent = project.category + " — " + project.description;
+
+    info.appendChild(title);
+    info.appendChild(category);
+
+    const remove = document.createElement("button");
+    remove.className = "delete-btn";
+    remove.textContent = "حذف";
+
+    remove.addEventListener("click", function () {
+      projects.splice(index, 1);
+      renderProjects();
+    });
+
+    item.appendChild(info);
+    item.appendChild(remove);
+    list.appendChild(item);
+  });
+}
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  projects.push({
+    name: document.getElementById("projectName").value.trim(),
+    category: document.getElementById("projectCategory").value.trim(),
+    description: document.getElementById("projectDescription").value.trim()
+  });
+
+  renderProjects();
+  form
+
+.reset();
+  alert("نمونه‌کار به فهرست نمایشی اضافه شد.");
+});
+</script>
+
+</body>
+</html>
